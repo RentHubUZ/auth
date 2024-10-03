@@ -1,0 +1,9 @@
+basePath: /auth
+host: localhost:8081
+info:
+  contact: {}
+  description: Authorazation API of RentHub
+  title: Authorazation
+  version: "1.0"
+paths: {}
+swagger: "2.0"
