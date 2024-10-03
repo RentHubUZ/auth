@@ -5,6 +5,7 @@ import (
 	"auth/internal/api/handler"
 	"auth/internal/config"
 	"auth/internal/storage"
+	"auth/internal/storage/redis"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -16,8 +17,8 @@ import (
 // @description Authorazation API of RentHub
 // @host localhost:8081
 // @BasePath /auth
-func NewRouter(s storage.IStorage, cfg *config.Config) *gin.Engine {
-	h := handler.NewHandler(s, cfg)
+func NewRouter(s storage.IStorage, rdb *redis.RedisDB, cfg *config.Config) *gin.Engine {
+	h := handler.NewHandler(s, rdb, cfg)
 
 	r := gin.Default()
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

@@ -71,6 +71,18 @@ func (s *UserService) ValidateUser(ctx context.Context, req *pb.ID) (*pb.Status,
 	return resp, nil
 }
 
+func (s *UserService) UpdatePassword(ctx context.Context, req *pb.NewPass) (*pb.Void, error) {
+	s.logger.Info("UpdatePassword is invoked")
+
+	err := s.storage.User().UpdatePassword(ctx, req.Id, req.Password)
+	if err != nil {
+		return nil, handleError(err, "failed to update password", s.logger)
+	}
+
+	s.logger.Info("UpdatePassword is completed")
+	return &pb.Void{}, nil
+}
+
 func handleError(err error, msg string, logger *slog.Logger) error {
 	er := errors.Wrap(err, msg)
 	logger.Error(er.Error())

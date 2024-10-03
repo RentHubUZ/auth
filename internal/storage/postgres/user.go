@@ -173,3 +173,51 @@ func (r *UserRepo) GetByEmail(ctx context.Context, email string) (*models.UserDe
 
 	return &u, nil
 }
+
+func (r *UserRepo) UpdatePassword(ctx context.Context, id, password string) error {
+	query := `
+	update
+		users
+	set
+		hashed_password = $1
+	where
+		deleted_at is null and id = $2
+	`
+
+	res, err := r.db.ExecContext(ctx, query, password, id)
+	if err != nil {
+		return err
+	}
+
+	n, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if n < 1 {
+		return errors.New("user not found")
+	}
+
+	return nil
+}
+
+func (r *UserRepo) GetRole(ctx context.Context, id string) (string, error) {
+	query := `
+	select
+		role
+	from
+		users
+	where
+		deleted_at is null and id = $1
+	`
+
+	var role string
+	err := r.db.QueryRowContext(ctx, query, id).Scan(&role)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", errors.New("user not found")
+		}
+		return "", err
+	}
+
+	return role, nil
+}

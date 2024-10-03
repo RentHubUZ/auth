@@ -4,6 +4,7 @@ import (
 	"auth/internal/config"
 	"auth/internal/logger"
 	"auth/internal/storage"
+	"auth/internal/storage/redis"
 	"context"
 	"log/slog"
 	"time"
@@ -14,14 +15,16 @@ import (
 
 type Handler struct {
 	Storage        storage.IStorage
+	RedisDB        *redis.RedisDB
 	Logger         *slog.Logger
 	Config         *config.Config
 	ContextTimeout time.Duration
 }
 
-func NewHandler(s storage.IStorage, cfg *config.Config) *Handler {
+func NewHandler(s storage.IStorage, rdb *redis.RedisDB, cfg *config.Config) *Handler {
 	return &Handler{
 		Storage:        s,
+		RedisDB:        rdb,
 		Logger:         logger.NewLogger(),
 		Config:         cfg,
 		ContextTimeout: time.Second * 5,
