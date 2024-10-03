@@ -11,6 +11,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Register godoc
+// @Summary Registers user
+// @Description Registers a new user
+// @Tags auth
+// @Param user body models.RegisterData true "User data"
+// @Success 200 {object} models.RegisterResp
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Server error while processing request"
+// @Router /register [post]
 func (h *Handler) Register(c *gin.Context) {
 	h.Logger.Info("Register handler is invoked")
 
@@ -49,6 +58,15 @@ func (h *Handler) Register(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
+// Login godoc
+// @Summary Login user
+// @Description Logs user in
+// @Tags auth
+// @Param user body models.LoginReq true "User data"
+// @Success 200 {object} models.Tokens
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Server error while processing request"
+// @Router /login [post]
 func (h *Handler) Login(c *gin.Context) {
 	h.Logger.Info("Login handler is invoked")
 
@@ -92,6 +110,15 @@ func (h *Handler) Login(c *gin.Context) {
 	})
 }
 
+// ForgotPassword godoc
+// @Summary Forgot password
+// @Description Sends password reset email
+// @Tags auth
+// @Param email query string true "Email"
+// @Success 200 {object} string "Check your email to reset password"
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Server error while processing request"
+// @Router /forgot-password [post]
 func (h *Handler) ForgotPassword(c *gin.Context) {
 	h.Logger.Info("ForgotPassword handler is invoked")
 
@@ -120,6 +147,15 @@ func (h *Handler) ForgotPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "check your email to reset password"})
 }
 
+// ResetPassword godoc
+// @Summary Resets password
+// @Description Resets password
+// @Tags auth
+// @Param user body models.ResetPassReq true "User data"
+// @Success 200 {object} string "Password reset successfully"
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Server error while processing request"
+// @Router /reset-password [post]
 func (h *Handler) ResetPassword(c *gin.Context) {
 	h.Logger.Info("ResetPassword handler is invoked")
 
@@ -153,6 +189,15 @@ func (h *Handler) ResetPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "password reset successfully"})
 }
 
+// RefreshToken godoc
+// @Summary Refreshes token
+// @Description Refreshes refresh token
+// @Tags auth
+// @Param data body models.RefreshToken true "Refresh token"
+// @Success 200 {object} models.Tokens
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Server error while processing request"
+// @Router /refresh [post]
 func (h *Handler) RefreshToken(c *gin.Context) {
 	h.Logger.Info("RefreshToken handler is invoked")
 
@@ -196,6 +241,15 @@ func (h *Handler) RefreshToken(c *gin.Context) {
 	})
 }
 
+// ValidateToken godoc
+// @Summary Validates token
+// @Description Validates access token
+// @Tags auth
+// @Param data body models.AccessToken true "Access token"
+// @Success 200 {string} string "Access token is valid"
+// @Failure 400 {object} string "Invalid data"
+// @Failure 500 {object} string "Server error while processing request"
+// @Router /validate [post]
 func (h *Handler) ValidateToken(c *gin.Context) {
 	h.Logger.Info("ValidateToken handler is invoked")
 
@@ -215,6 +269,15 @@ func (h *Handler) ValidateToken(c *gin.Context) {
 	c.JSON(http.StatusOK, "Access token is valid")
 }
 
+// Logout godoc
+// @Summary Logouts user
+// @Description Logouts user
+// @Tags auth
+// @Param email query string true "User email"
+// @Success 200 {string} string "User logged out successfully"
+// @Failure 400 {object} string "Invalid email"
+// @Failure 500 {object} string "Server error while processing request"
+// @Router /logout [post]
 func (h *Handler) Logout(c *gin.Context) {
 	h.Logger.Info("Logout handler is invoked")
 
