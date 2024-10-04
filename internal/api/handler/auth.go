@@ -4,6 +4,7 @@ import (
 	"auth/internal/api/email"
 	"auth/internal/api/tokens"
 	"auth/internal/models"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -173,13 +174,35 @@ func (h *Handler) ResetPassword(c *gin.Context) {
 	ctx, cancel := makeContext(h)
 	defer cancel()
 
+	code, err := h.RedisDB.GetCode(ctx, req.Email)
+	if err != nil {
+		handleError(c, h, err, "invalid credentials", http.StatusUnauthorized)
+		return
+	}
+
+	if req.Code != code {
+		handleError(c, h, errors.New("invalid code"), "invalid credentials", http.StatusUnauthorized)
+		return
+	}
+
+	err = h.RedisDB.DeleteCode(ctx, req.Email)
+	if err != nil {
+		log.Printf("error while deleting code from redis: %v", err)
+	}
+
 	user, err := h.Storage.User().GetByEmail(ctx, req.Email)
 	if err != nil {
 		handleError(c, h, err, "invalid credentials", http.StatusUnauthorized)
 		return
 	}
 
-	err = h.Storage.User().UpdatePassword(ctx, user.ID, req.NewPassword)
+	passByte, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		handleError(c, h, err, "error hashing password", http.StatusInternalServerError)
+		return
+	}
+
+	err = h.Storage.User().UpdatePassword(ctx, user.ID, string(passByte))
 	if err != nil {
 		handleError(c, h, err, "error updating password", http.StatusInternalServerError)
 		return
@@ -197,7 +220,7 @@ func (h *Handler) ResetPassword(c *gin.Context) {
 // @Success 200 {object} models.Tokens
 // @Failure 400 {object} string "Invalid data"
 // @Failure 500 {object} string "Server error while processing request"
-// @Router /refresh [post]
+// @Router /refresh-token [post]
 func (h *Handler) RefreshToken(c *gin.Context) {
 	h.Logger.Info("RefreshToken handler is invoked")
 
@@ -249,7 +272,7 @@ func (h *Handler) RefreshToken(c *gin.Context) {
 // @Success 200 {string} string "Access token is valid"
 // @Failure 400 {object} string "Invalid data"
 // @Failure 500 {object} string "Server error while processing request"
-// @Router /validate [post]
+// @Router /validate-token [post]
 func (h *Handler) ValidateToken(c *gin.Context) {
 	h.Logger.Info("ValidateToken handler is invoked")
 

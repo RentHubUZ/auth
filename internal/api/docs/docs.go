@@ -131,7 +131,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/refresh": {
+        "/refresh-token": {
             "post": {
                 "description": "Refreshes refresh token",
                 "tags": [
@@ -251,7 +251,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/validate": {
+        "/validate-token": {
             "post": {
                 "description": "Validates access token",
                 "tags": [

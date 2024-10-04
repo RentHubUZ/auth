@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/cast"
@@ -22,6 +23,8 @@ type Config struct {
 	REDIS_PASSWORD    string
 	REDIS_DB          int
 	REDIS_PREFIX      string
+	REDIS_TOKEN_TTL   time.Duration
+	REDIS_CODE_TTL    time.Duration
 	EMAIL             string
 	APP_KEY           string
 }
@@ -46,10 +49,12 @@ func Load() *Config {
 		DB_NAME:     cast.ToString(coalesce("DB_NAME", "postgres")),
 		DB_PASSWORD: cast.ToString(coalesce("DB_PASSWORD", "password")),
 
-		REDIS_ADDRESS:  cast.ToString(coalesce("REDIS_ADDRESS", "localhost:6379")),
-		REDIS_PASSWORD: cast.ToString(coalesce("REDIS_PASSWORD", "")),
-		REDIS_DB:       cast.ToInt(coalesce("REDIS_DB", "0")),
-		REDIS_PREFIX:   cast.ToString(coalesce("REDIS_PREFIX", "rent-hub:")),
+		REDIS_ADDRESS:   cast.ToString(coalesce("REDIS_ADDRESS", "localhost:6379")),
+		REDIS_PASSWORD:  cast.ToString(coalesce("REDIS_PASSWORD", "")),
+		REDIS_DB:        cast.ToInt(coalesce("REDIS_DB", "0")),
+		REDIS_PREFIX:    cast.ToString(coalesce("REDIS_PREFIX", "rent-hub:")),
+		REDIS_TOKEN_TTL: cast.ToDuration(coalesce("REDIS_TOKEN_TTL", "24h")),
+		REDIS_CODE_TTL:  cast.ToDuration(coalesce("REDIS_CODE_TTL", "3m")),
 
 		ACCESS_TOKEN_KEY:  cast.ToString(coalesce("ACCESS_TOKEN_KEY", "key")),
 		REFRESH_TOKEN_KEY: cast.ToString(coalesce("REFRESH_TOKEN_KEY", "key")),

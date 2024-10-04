@@ -2,7 +2,6 @@ package redis
 
 import (
 	"context"
-	"time"
 
 	"github.com/pkg/errors"
 	"github.com/redis/go-redis/v9"
@@ -13,7 +12,7 @@ func (r *RedisDB) StoreCode(ctx context.Context, email, code string) error {
 		return errors.New("invalid email or code")
 	}
 
-	err := r.db.Set(ctx, r.prefix+email, code, time.Minute*3).Err()
+	err := r.db.Set(ctx, r.prefix+email, code, r.codeTTL).Err()
 	if err != nil {
 		return errors.Wrap(err, "failed to store code")
 	}

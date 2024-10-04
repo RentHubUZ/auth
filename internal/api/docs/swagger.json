@@ -125,7 +125,7 @@
                 }
             }
         },
-        "/refresh": {
+        "/refresh-token": {
             "post": {
                 "description": "Refreshes refresh token",
                 "tags": [
@@ -245,7 +245,7 @@
                 }
             }
         },
-        "/validate": {
+        "/validate-token": {
             "post": {
                 "description": "Validates access token",
                 "tags": [

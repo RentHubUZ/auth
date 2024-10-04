@@ -179,7 +179,7 @@ func (r *UserRepo) UpdatePassword(ctx context.Context, id, password string) erro
 	update
 		users
 	set
-		hashed_password = $1
+		hashed_password = $1, updated_at = now()
 	where
 		deleted_at is null and id = $2
 	`

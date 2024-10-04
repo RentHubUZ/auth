@@ -2,7 +2,6 @@ package redis
 
 import (
 	"context"
-	"time"
 
 	"github.com/pkg/errors"
 	"github.com/redis/go-redis/v9"
@@ -13,7 +12,7 @@ func (r *RedisDB) StoreToken(ctx context.Context, userID, token string) error {
 		return errors.New("invalid user id or token")
 	}
 
-	err := r.db.Set(ctx, r.prefix+userID, token, time.Hour*24).Err()
+	err := r.db.Set(ctx, r.prefix+userID, token, r.tokenTTL).Err()
 	if err != nil {
 		return errors.Wrap(err, "failed to store token")
 	}

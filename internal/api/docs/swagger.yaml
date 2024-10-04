@@ -134,7 +134,7 @@ paths:
       summary: Logouts user
       tags:
       - auth
-  /refresh:
+  /refresh-token:
     post:
       description: Refreshes refresh token
       parameters:
@@ -212,7 +212,7 @@ paths:
       summary: Resets password
       tags:
       - auth
-  /validate:
+  /validate-token:
     post:
       description: Validates access token
       parameters:
