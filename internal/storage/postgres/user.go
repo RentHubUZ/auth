@@ -221,3 +221,25 @@ func (r *UserRepo) GetRole(ctx context.Context, id string) (string, error) {
 
 	return role, nil
 }
+
+func (r *UserRepo) GetPassword(ctx context.Context, id string) (string, error) {
+	query := `
+	select
+		hashed_password
+	from
+		users
+	where
+		deleted_at is null and id = $1
+	`
+
+	var password string
+	err := r.db.QueryRowContext(ctx, query, id).Scan(&password)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", errors.New("user not found")
+		}
+		return "", err
+	}
+
+	return password, nil
+}

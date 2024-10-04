@@ -20,4 +20,5 @@ type IUserStorage interface {
 	GetByEmail(ctx context.Context, email string) (*models.UserDetails, error)
 	UpdatePassword(ctx context.Context, id, password string) error
 	GetRole(ctx context.Context, id string) (string, error)
+	GetPassword(ctx context.Context, id string) (string, error)
 }

@@ -25,7 +25,7 @@ type UserClient interface {
 	GetProfile(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Profile, error)
 	UpdateProfile(ctx context.Context, in *NewData, opts ...grpc.CallOption) (*Void, error)
 	DeleteProfile(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Void, error)
-	UpdatePassword(ctx context.Context, in *NewPass, opts ...grpc.CallOption) (*Void, error)
+	ChangePassword(ctx context.Context, in *NewPass, opts ...grpc.CallOption) (*Void, error)
 	ValidateUser(ctx context.Context, in *ID, opts ...grpc.CallOption) (*Status, error)
 }
 
@@ -64,9 +64,9 @@ func (c *userClient) DeleteProfile(ctx context.Context, in *ID, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *userClient) UpdatePassword(ctx context.Context, in *NewPass, opts ...grpc.CallOption) (*Void, error) {
+func (c *userClient) ChangePassword(ctx context.Context, in *NewPass, opts ...grpc.CallOption) (*Void, error) {
 	out := new(Void)
-	err := c.cc.Invoke(ctx, "/user.User/UpdatePassword", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user.User/ChangePassword", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ type UserServer interface {
 	GetProfile(context.Context, *ID) (*Profile, error)
 	UpdateProfile(context.Context, *NewData) (*Void, error)
 	DeleteProfile(context.Context, *ID) (*Void, error)
-	UpdatePassword(context.Context, *NewPass) (*Void, error)
+	ChangePassword(context.Context, *NewPass) (*Void, error)
 	ValidateUser(context.Context, *ID) (*Status, error)
 	mustEmbedUnimplementedUserServer()
 }
@@ -107,8 +107,8 @@ func (UnimplementedUserServer) UpdateProfile(context.Context, *NewData) (*Void, 
 func (UnimplementedUserServer) DeleteProfile(context.Context, *ID) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteProfile not implemented")
 }
-func (UnimplementedUserServer) UpdatePassword(context.Context, *NewPass) (*Void, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
+func (UnimplementedUserServer) ChangePassword(context.Context, *NewPass) (*Void, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
 }
 func (UnimplementedUserServer) ValidateUser(context.Context, *ID) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidateUser not implemented")
@@ -180,20 +180,20 @@ func _User_DeleteProfile_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _User_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(NewPass)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServer).UpdatePassword(ctx, in)
+		return srv.(UserServer).ChangePassword(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/user.User/UpdatePassword",
+		FullMethod: "/user.User/ChangePassword",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UpdatePassword(ctx, req.(*NewPass))
+		return srv.(UserServer).ChangePassword(ctx, req.(*NewPass))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -236,8 +236,8 @@ var User_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _User_DeleteProfile_Handler,
 		},
 		{
-			MethodName: "UpdatePassword",
-			Handler:    _User_UpdatePassword_Handler,
+			MethodName: "ChangePassword",
+			Handler:    _User_ChangePassword_Handler,
 		},
 		{
 			MethodName: "ValidateUser",

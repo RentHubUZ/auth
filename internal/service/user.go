@@ -8,6 +8,7 @@ import (
 	"log/slog"
 
 	"github.com/pkg/errors"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
@@ -71,10 +72,24 @@ func (s *UserService) ValidateUser(ctx context.Context, req *pb.ID) (*pb.Status,
 	return resp, nil
 }
 
-func (s *UserService) UpdatePassword(ctx context.Context, req *pb.NewPass) (*pb.Void, error) {
+func (s *UserService) ChangePassword(ctx context.Context, req *pb.NewPass) (*pb.Void, error) {
 	s.logger.Info("UpdatePassword is invoked")
 
-	err := s.storage.User().UpdatePassword(ctx, req.Id, req.Password)
+	password, err := s.storage.User().GetPassword(ctx, req.Id)
+	if err != nil {
+		return nil, handleError(err, "failed to get current password", s.logger)
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(password), []byte(req.OldPassword)); err != nil {
+		return nil, handleError(err, "invalid current password", s.logger)
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, handleError(err, "failed to hash new password", s.logger)
+	}
+
+	err = s.storage.User().UpdatePassword(ctx, req.Id, string(hashedPassword))
 	if err != nil {
 		return nil, handleError(err, "failed to update password", s.logger)
 	}
