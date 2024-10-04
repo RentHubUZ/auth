@@ -31,8 +31,8 @@ func NewHandler(s storage.IStorage, rdb *redis.RedisDB, cfg *config.Config) *Han
 	}
 }
 
-func makeContext(h *Handler) (context.Context, context.CancelFunc) {
-	return context.WithTimeout(context.Background(), h.ContextTimeout)
+func makeContext(h *Handler, c context.Context) (context.Context, context.CancelFunc) {
+	return context.WithTimeout(c, h.ContextTimeout)
 }
 
 func handleError(c *gin.Context, h *Handler, err error, msg string, code int) {

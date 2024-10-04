@@ -41,7 +41,7 @@ func (h *Handler) Register(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := makeContext(h)
+	ctx, cancel := makeContext(h, c)
 	defer cancel()
 
 	resp, err := h.Storage.User().Add(ctx, &models.RegisterReq{
@@ -77,7 +77,7 @@ func (h *Handler) Login(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := makeContext(h)
+	ctx, cancel := makeContext(h, c)
 	defer cancel()
 
 	user, err := h.Storage.User().GetByEmail(ctx, req.Email)
@@ -129,7 +129,7 @@ func (h *Handler) ForgotPassword(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := makeContext(h)
+	ctx, cancel := makeContext(h, c)
 	defer cancel()
 
 	_, err := h.Storage.User().GetByEmail(ctx, req)
@@ -171,7 +171,7 @@ func (h *Handler) ResetPassword(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := makeContext(h)
+	ctx, cancel := makeContext(h, c)
 	defer cancel()
 
 	code, err := h.RedisDB.GetCode(ctx, req.Email)
@@ -230,7 +230,7 @@ func (h *Handler) RefreshToken(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := makeContext(h)
+	ctx, cancel := makeContext(h, c)
 	defer cancel()
 
 	valid, err := tokens.ValidateRefreshToken(ctx, h.Config, h.RedisDB, req.RefreshToken)
@@ -310,7 +310,7 @@ func (h *Handler) Logout(c *gin.Context) {
 		return
 	}
 
-	ctx, cancel := makeContext(h)
+	ctx, cancel := makeContext(h, c)
 	defer cancel()
 
 	user, err := h.Storage.User().GetByEmail(ctx, email)
