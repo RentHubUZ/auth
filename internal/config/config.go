@@ -21,6 +21,7 @@ type Config struct {
 	REDIS_ADDRESS     string
 	REDIS_PASSWORD    string
 	REDIS_DB          int
+	REDIS_PREFIX      string
 	EMAIL             string
 	APP_KEY           string
 }
@@ -48,6 +49,7 @@ func Load() *Config {
 		REDIS_ADDRESS:  cast.ToString(coalesce("REDIS_ADDRESS", "localhost:6379")),
 		REDIS_PASSWORD: cast.ToString(coalesce("REDIS_PASSWORD", "")),
 		REDIS_DB:       cast.ToInt(coalesce("REDIS_DB", "0")),
+		REDIS_PREFIX:   cast.ToString(coalesce("REDIS_PREFIX", "rent-hub:")),
 
 		ACCESS_TOKEN_KEY:  cast.ToString(coalesce("ACCESS_TOKEN_KEY", "key")),
 		REFRESH_TOKEN_KEY: cast.ToString(coalesce("REFRESH_TOKEN_KEY", "key")),

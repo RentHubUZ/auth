@@ -21,7 +21,7 @@ func NewRedisDB(cfg *config.Config) *RedisDB {
 
 	return &RedisDB{
 		db:     rdb,
-		prefix: "rent-hub:",
+		prefix: cfg.REDIS_PREFIX,
 	}
 }
 
