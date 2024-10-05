@@ -40,8 +40,8 @@ func Load() *Config {
 	}
 
 	return &Config{
-		AUTH_ROUTER_PORT:  cast.ToString(coalesce("AUTH_ROUTER_PORT", "localhost:8081")),
-		AUTH_SERVICE_PORT: cast.ToString(coalesce("AUTH_SERVICE_PORT", "localhost:50051")),
+		AUTH_ROUTER_PORT:  cast.ToString(coalesce("AUTH_ROUTER_PORT", "localhost:5555")),
+		AUTH_SERVICE_PORT: cast.ToString(coalesce("AUTH_SERVICE_PORT", "localhost:4444")),
 
 		DB_HOST:     cast.ToString(coalesce("DB_HOST", "localhost")),
 		DB_PORT:     cast.ToString(coalesce("DB_PORT", "5432")),

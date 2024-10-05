@@ -2,7 +2,7 @@ package service
 
 import (
 	pb "auth/genproto/user"
-	"auth/internal/logger"
+	logger "auth/internal/logs"
 	"auth/internal/storage"
 	"context"
 	"log/slog"

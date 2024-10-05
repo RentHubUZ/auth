@@ -15,7 +15,7 @@ import (
 // @title Authorazation
 // @version 1.0
 // @description Authorazation API of RentHub
-// @host localhost:8081
+// @host localhost:5555
 // @BasePath /auth
 func NewRouter(s storage.IStorage, rdb *redis.RedisDB, cfg *config.Config) *gin.Engine {
 	h := handler.NewHandler(s, rdb, cfg)

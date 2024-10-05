@@ -2,7 +2,7 @@ package handler
 
 import (
 	"auth/internal/config"
-	"auth/internal/logger"
+	logger "auth/internal/logs"
 	"auth/internal/storage"
 	"auth/internal/storage/redis"
 	"context"
