@@ -40,16 +40,16 @@ func Load() *Config {
 	}
 
 	return &Config{
-		AUTH_ROUTER_PORT:  cast.ToString(coalesce("AUTH_ROUTER_PORT", "localhost:5555")),
-		AUTH_SERVICE_PORT: cast.ToString(coalesce("AUTH_SERVICE_PORT", "localhost:4444")),
+		AUTH_ROUTER_PORT:  cast.ToString(coalesce("AUTH_ROUTER_PORT", "auth:5555")),
+		AUTH_SERVICE_PORT: cast.ToString(coalesce("AUTH_SERVICE_PORT", "auth:4444")),
 
-		DB_HOST:     cast.ToString(coalesce("DB_HOST", "localhost")),
+		DB_HOST:     cast.ToString(coalesce("DB_HOST", "postgres_auth")),
 		DB_PORT:     cast.ToString(coalesce("DB_PORT", "5432")),
 		DB_USER:     cast.ToString(coalesce("DB_USER", "postgres")),
 		DB_NAME:     cast.ToString(coalesce("DB_NAME", "postgres")),
 		DB_PASSWORD: cast.ToString(coalesce("DB_PASSWORD", "password")),
 
-		REDIS_ADDRESS:   cast.ToString(coalesce("REDIS_ADDRESS", "localhost:6379")),
+		REDIS_ADDRESS:   cast.ToString(coalesce("REDIS_ADDRESS", "redis:6379")),
 		REDIS_PASSWORD:  cast.ToString(coalesce("REDIS_PASSWORD", "")),
 		REDIS_DB:        cast.ToInt(coalesce("REDIS_DB", "0")),
 		REDIS_PREFIX:    cast.ToString(coalesce("REDIS_PREFIX", "rent-hub:")),

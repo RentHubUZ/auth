@@ -2,16 +2,16 @@ version: '3.8'
 
 services:
   postgres-db:
-    container_name: postgres
-    image: postgis/postgis:15-3.3  # PostGIS o'rnatilgan rasm
+    container_name: postgres_auth
+    image: postgis/postgis:15-3.3  
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=rent_hub_accomodation
+      - POSTGRES_DB=rent_hub_auth
     ports:
       - "5433:5432"
     volumes:
-      - db:/var/lib/postgresql/data  # To'g'ri volume yo'li
+      - db:/var/lib/postgresql/data
     networks:
       - renthub
     healthcheck:
@@ -29,7 +29,22 @@ services:
     depends_on:
       postgres-db:
         condition: service_healthy
-    command: ["-path", "./migrations", "-database", "postgres://postgres:root@postgres:5432/rent_hub_accomodation?sslmode=disable", "up"]
+    command: ["-path", "./migrations", "-database", "postgres://postgres:root@postgres_auth:5432/rent_hub_auth?sslmode=disable", "up"]
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - renthub
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   auth:
     container_name: auth
@@ -44,9 +59,12 @@ services:
         condition: service_healthy
       migrate:
         condition: service_started
+      redis:
+        condition: service_healthy
 
 networks:
   renthub:
 
 volumes:
   db:
+  redis-data:
