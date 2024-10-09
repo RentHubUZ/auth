@@ -6,7 +6,6 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:5555",
     "basePath": "/auth",
     "paths": {
         "/forgot-password": {
