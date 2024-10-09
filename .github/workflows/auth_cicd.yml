@@ -1,4 +1,4 @@
-name: API
+name: API Deployment
 
 on:
   push:
@@ -14,18 +14,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Add Known Hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
       - name: Install Dependencies
         run: go mod download
 
       - name: Build
         run: go build -v ./...
 
-      - name: Deploy
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
             if [ -d "renthub" ]; then
