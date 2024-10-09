@@ -16,7 +16,7 @@ WORKDIR /app
 
 COPY --from=builder /app/myapp .
 COPY --from=builder /app/.env .
-COPY --from=builder /app/api/email/template.html ./api/email/
+COPY --from=builder /app/internal/api/email/template.html /internal/api/email/
 
 EXPOSE 4444
 EXPOSE 5555
