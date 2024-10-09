@@ -1,4 +1,4 @@
-name: API Deployment
+name: API
 
 on:
   push:
@@ -14,22 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-
-      - name: Add Known Hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-
       - name: Install Dependencies
         run: go mod download
 
       - name: Build
         run: go build -v ./...
 
-      - name: Deploy via SSH
+      - name: Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
