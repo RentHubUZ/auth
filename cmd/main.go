@@ -37,22 +37,26 @@ func main() {
 }
 
 func RunService(wg *sync.WaitGroup, db storage.IStorage, port string) {
-	defer wg.Done()
+    defer wg.Done()
 
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("error while listening: %v", err)
-	}
-	defer lis.Close()
+    lis, err := net.Listen("tcp", port)
+    if err != nil {
+        log.Fatalf("error while listening: %v", err)
+    }
+    defer lis.Close()
 
-	server := grpc.NewServer()
-	pb.RegisterUserServer(server, service.NewUserService(db))
+    server := grpc.NewServer(
+        grpc.MaxRecvMsgSize(1024*1024), // 1 MB
+        grpc.MaxSendMsgSize(1024*1024), // 1 MB
+    )
+    pb.RegisterUserServer(server, service.NewUserService(db))
 
-	log.Printf("Service is listening on port %s...\n", port)
-	if err := server.Serve(lis); err != nil {
-		log.Fatalf("error while serving auth service: %s", err)
-	}
+    log.Printf("Service is listening on port %s...\n", port)
+    if err := server.Serve(lis); err != nil {
+        log.Fatalf("error while serving auth service: %s", err)
+    }
 }
+
 
 func RunRouter(wg *sync.WaitGroup, db storage.IStorage, rdb *redis.RedisDB, cfg *config.Config) {
 	defer wg.Done()
